@@ -7,12 +7,16 @@
 
 namespace game {
 
+  class Game;
+
   enum BlockState {
     state_empty = 0,
   };
 
   class Board {
   private:
+    Game* m_game;
+
     int m_columns;
     int m_rows;
 
@@ -75,6 +79,11 @@ namespace game {
     int m_score;
 
   private:
+    //
+    // State
+    //
+    void initialize();
+
     // Get the array index for a given row, column combination, access with m_state[...]
     const int get_index( const int row, const int column ) const;
 
@@ -101,11 +110,6 @@ namespace game {
 
     // Draws the tetromino to the board.
     void draw_tetromino();
-
-    //
-    // State
-    //
-    void initialize();
 
     //
     // Line clearing functions.
@@ -135,7 +139,7 @@ namespace game {
     void draw_next_tetromino( const float x, const float y );
 
   public:
-    Board();
+    Board( Game* game );
 
   public:
     const int get_state( const int row, const int column ) const;

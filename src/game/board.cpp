@@ -1,4 +1,7 @@
+#define NOMINMAX
+
 #include <game/board.hpp>
+#include <game/game.hpp>
 
 #include <random>
 #include <algorithm>
@@ -18,11 +21,39 @@ const auto& random_number = []( const int min, const int max ) -> int {
   return uniform_dist( e1 );
 };
 
-game::Board::Board() {
+game::Board::Board( Game* game ) : m_game( game ) {
   m_columns = 20;
   m_rows = 10;
   m_state = std::make_unique< int[] >( m_rows * m_columns );
   reset();
+}
+
+void game::Board::initialize() {
+  //
+  // Game state.
+  //
+  m_game_over = false;
+  m_level = 0;
+  m_lines_cleared = 0;
+  m_score = 0;
+
+  //
+  // Physics data.
+  //
+  m_first_move = true;
+  m_next_move_time = 0.0;
+  m_last_move_time = 0.0;
+  m_next_rotate_time = 0.0;
+  m_last_rotate_time = 0.0;
+  m_time_on_line = 0.0;
+
+  //
+  // Tetromino data.
+  //
+  m_curr_tetromino = nullptr;
+  m_next_tetromino_idx = random_number( 0, NUM_TETROMINO - 1 );
+  m_curr_tetromino_idx = m_next_tetromino_idx;
+  new_tetromino();
 }
 
 const int game::Board::get_index( const int row, const int column ) const {
@@ -31,6 +62,24 @@ const int game::Board::get_index( const int row, const int column ) const {
   }
 
   return row * m_columns + column;
+}
+
+const int game::Board::get_state( const int row, const int column ) const {
+  const int index = get_index( row, column );
+  if( index == -1 ) {
+    return 0;
+  }
+
+  return m_state[ index ];
+}
+
+void game::Board::set_state( const int row, const int column, int state ) {
+  const int index = get_index( row, column );
+  if( index == -1 ) {
+    return;
+  }
+
+  m_state[ index ] = state;
 }
 
 void game::Board::new_tetromino() {
@@ -219,46 +268,6 @@ void game::Board::draw_tetromino() {
   }
 }
 
-void game::Board::initialize() {
-  //
-  // Game state.
-  //
-  m_game_over = false;
-  m_level = 0;
-  m_lines_cleared = 0;
-  m_score = 0;
-
-  //
-  // Physics data.
-  //
-  m_first_move = true;
-  m_next_move_time = 0.0;
-  m_last_move_time = 0.0;
-  m_next_rotate_time = 0.0;
-  m_last_rotate_time = 0.0;
-  m_time_on_line = 0.0;
-
-  //
-  // Tetromino data.
-  //
-  m_curr_tetromino = nullptr;
-  m_next_tetromino_idx = random_number( 0, NUM_TETROMINO - 1 );
-  m_curr_tetromino_idx = m_next_tetromino_idx;
-  new_tetromino();
-}
-
-void game::Board::reset() {
-  //
-  // Reset the board state.
-  //
-  memset( &m_state[ 0 ], 0, sizeof( int ) * m_rows * m_columns );
-
-  //
-  // Initialize all board related data (physics, etc..)
-  //
-  initialize();
-}
-
 int game::Board::num_lines_completed() {
   int lines = 0;
 
@@ -351,25 +360,11 @@ void game::Board::update_score( const int num_lines_completed ) {
 
   // Update level (we're using A-Type level system)
   m_lines_cleared += num_lines_completed;
-  m_level = ceil( ( float ) ( m_lines_cleared / 10 ) );
-}
+  m_level = ceil( ( float ) ( m_lines_cleared / 1 ) );
 
-const int game::Board::get_state( const int row, const int column ) const {
-  const int index = get_index( row, column );
-  if( index == -1 ) {
-    return 0;
-  }
-
-  return m_state[ index ];
-}
-
-void game::Board::set_state( const int row, const int column, int state ) {
-  const int index = get_index( row, column );
-  if( index == -1 ) {
-    return;
-  }
-
-  m_state[ index ] = state;
+  // Whenever we update the score, increase the frequency at which the music plays back.
+  const float frequency_modifer = 1.F + std::min( ( 0.25F / 19 ) * ( m_level - 1 ), 0.25F );
+  m_game->music().set_frequency( frequency_modifer );
 }
 
 const int game::Board::width() const {
@@ -394,7 +389,23 @@ void game::Board::draw( const float x, const float y ) {
       if( get_state( row, column ) > 0 ) {
         const int tetromino_idx = get_state( row, column ) - 1;
         const uint32_t col = m_colours[ tetromino_idx ];
-        draw_list->AddRectFilled( { current_x, current_y }, { current_x + GRID_SIZE, current_y + GRID_SIZE }, col, 4.F );
+        //const uint32_t col1 = 0xAF000000 | m_colours[ tetromino_idx ] & 0x00FFFFFF;
+
+        draw_list->AddRectFilled( 
+          { current_x, current_y },
+          { current_x + GRID_SIZE, current_y + GRID_SIZE }, 
+          col, 
+          4.F
+        );
+
+        //draw_list->AddRect(
+        //  { current_x, current_y },
+        //  { current_x + GRID_SIZE, current_y + GRID_SIZE },
+        //  col,
+        //  4.F,
+        //  0,
+        //  2.F
+        //);
       }
       else {
         draw_list->AddRect( 
@@ -651,4 +662,16 @@ void game::Board::update() {
   clear_prev_tetromino();
   clear_completed_lines();
   draw_tetromino();
+}
+
+void game::Board::reset() {
+  //
+  // Reset the board state.
+  //
+  memset( &m_state[ 0 ], 0, sizeof( int ) * m_rows * m_columns );
+
+  //
+  // Initialize all board related data (physics, etc..)
+  //
+  initialize();
 }

@@ -3,6 +3,7 @@
 #include <window.hpp>
 #include <application.hpp>
 #include <renderer.hpp>
+#include <audio.hpp>
 
 #include <game/game.hpp>
 #include <game/board.hpp>
@@ -46,7 +47,9 @@ void update( app::Application& app, const double t, const double dt ) {
   g_game.update( app, t, dt );
 }
 
-int main() {
+int main( int argc, char* argv[] ) {
+  printf( "%s\n", argv[ 0 ] );
+
   // Create the main window.
   g_window = app::Window( TEXT( "TetrisApp001" ), TEXT( "Tetris" ), 1920, 1080 );
   g_window.set_message_handler( window_message_handler );

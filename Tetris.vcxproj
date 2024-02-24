@@ -140,7 +140,8 @@
     <ClCompile Include="includes\ext\imgui\imgui_draw.cpp" />
     <ClCompile Include="includes\ext\imgui\imgui_tables.cpp" />
     <ClCompile Include="includes\ext\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\audio.cpp" />
+    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\game\board.cpp" />
     <ClCompile Include="src\game\game.cpp" />
@@ -152,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\application.hpp" />
+    <ClInclude Include="includes\audio.hpp" />
     <ClInclude Include="includes\ext\imgui\imconfig.h" />
     <ClInclude Include="includes\ext\imgui\imgui.h" />
     <ClInclude Include="includes\ext\imgui\imgui_internal.h" />
@@ -164,6 +166,7 @@
     <ClInclude Include="includes\imgui\imgui_impl_dx11.hpp" />
     <ClInclude Include="includes\imgui\imgui_impl_win32.hpp" />
     <ClInclude Include="includes\renderer.hpp" />
+    <ClInclude Include="includes\singleton.hpp" />
     <ClInclude Include="includes\window.hpp" />
   </ItemGroup>
   <ItemGroup>

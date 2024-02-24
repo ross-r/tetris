@@ -8,9 +8,13 @@
 #undef min
 #undef max
 
-game::Game::Game() {
+game::Game::Game() : m_board( this ) {
   m_draw_metrics = true;
   m_paused = false;
+
+  m_music = app::Audio( TEXT( "Tetris.wav" ) );
+  m_music.set_volume( 0.05F );
+  m_music.play( true );
 }
 
 void game::Game::update( const app::Application& app, const double t, const double dt ) {
