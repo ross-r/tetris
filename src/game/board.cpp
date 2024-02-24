@@ -360,7 +360,7 @@ void game::Board::update_score( const int num_lines_completed ) {
 
   // Update level (we're using A-Type level system)
   m_lines_cleared += num_lines_completed;
-  m_level = ceil( ( float ) ( m_lines_cleared / 1 ) );
+  m_level = ceil( ( float ) ( m_lines_cleared / 10 ) );
 
   // Whenever we update the score, increase the frequency at which the music plays back.
   const float frequency_modifer = 1.F + std::min( ( 0.25F / 19 ) * ( m_level - 1 ), 0.25F );
