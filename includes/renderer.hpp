@@ -16,7 +16,6 @@ namespace app {
     ID3D11Device* m_device;
     ID3D11DeviceContext* m_context;
     ID3D11RenderTargetView* m_render_target;
-
     IDXGISwapChain* m_swapchain;
 
     void* m_imgui_context;
@@ -30,8 +29,9 @@ namespace app {
 
   public:
     Renderer();
-
+    
     bool initialize( const app::Window& window );
+    void shutdown();
 
   public:
     void begin();

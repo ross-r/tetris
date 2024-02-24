@@ -8,11 +8,10 @@
 #undef min
 #undef max
 
-game::Game::Game() : m_board( this ) {
+game::Game::Game() : m_board( this ), m_music( TEXT( "Tetris.wav" ) ) {
   m_draw_metrics = true;
   m_paused = false;
 
-  m_music = app::Audio( TEXT( "Tetris.wav" ) );
   m_music.set_volume( 0.05F );
   m_music.play( true );
 }

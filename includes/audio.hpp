@@ -28,6 +28,7 @@ namespace app {
   public:
     Audio();
     Audio( const std::wstring_view& file_name );
+    ~Audio();
 
     void set_frequency( const float frequency );
     void set_volume( const float volume );
@@ -48,6 +49,9 @@ namespace app {
 
   public:
     AudioEngine();
+    ~AudioEngine();
+
+    void shutdown();
 
     IXAudio2* xaudio() {
       return m_xaudio;

@@ -82,6 +82,23 @@ app::AudioEngine::AudioEngine() : m_xaudio( nullptr ), m_master_voice( nullptr )
   }
 }
 
+app::AudioEngine::~AudioEngine() {
+  shutdown();
+}
+
+void app::AudioEngine::shutdown() {
+  if( m_master_voice ) {
+    m_master_voice->DestroyVoice();
+    m_master_voice = nullptr;
+  }
+
+  if( m_xaudio ) {
+    m_xaudio->StopEngine();
+    m_xaudio->Release();
+    m_xaudio = nullptr;
+  }
+}
+
 bool app::AudioEngine::init() {
   //
   // https://learn.microsoft.com/en-us/windows/win32/xaudio2/how-to--initialize-xaudio2
@@ -104,6 +121,10 @@ bool app::AudioEngine::init() {
     return false;
   }
 
+  if( FAILED( hr = m_xaudio->StartEngine() ) ) {
+    return false;
+  }
+
   return hr == S_OK;
 }
 
@@ -119,6 +140,12 @@ app::Audio::Audio() :
 app::Audio::Audio( const std::wstring_view& file_name ) : Audio() {
   m_file_name = file_name;
   read_file();
+}
+
+app::Audio::~Audio() {
+  m_buffer.release();
+  m_buffer = nullptr;
+  m_buffer_size = 0;
 }
 
 bool app::Audio::read_file() {

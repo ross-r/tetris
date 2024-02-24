@@ -138,6 +138,31 @@ bool app::Renderer::initialize( const app::Window& window ) {
   return true;
 }
 
+void app::Renderer::shutdown() {
+  m_window = nullptr;
+  m_imgui_context = nullptr;
+
+  if( m_device ) {
+    m_device->Release();
+    m_device = nullptr;
+  }
+
+  if( m_context ) {
+    m_context->Release();
+    m_context = nullptr;
+  }
+
+  if( m_swapchain ) {
+    m_swapchain->Release();
+    m_swapchain = nullptr;
+  }
+
+  if( m_render_target ) {
+    m_render_target->Release();
+    m_render_target = nullptr;
+  }
+}
+
 void app::Renderer::begin() {
   m_context->OMSetRenderTargets( 1, &m_render_target, nullptr );
   m_context->ClearRenderTargetView( m_render_target, m_clear_color );

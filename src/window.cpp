@@ -112,12 +112,13 @@ app::Window::Window(
   m_imgui_context = m_renderer.imgui_context();
 }
 
-app::Window::~Window() {
-  if( m_handle == nullptr ) {
-    return;
-  }
+void app::Window::shutdown() {
+  m_renderer.shutdown();
 
-  CloseWindow( m_handle );
+  if( m_handle ) {
+    CloseWindow( m_handle );
+    m_handle = nullptr;
+  }
 }
 
 const void app::Window::show() const {

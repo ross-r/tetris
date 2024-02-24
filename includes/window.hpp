@@ -43,10 +43,10 @@ namespace app {
     Window();
     Window( const std::wstring_view& title, const int width, const int height );
     Window( const std::wstring_view& class_name, const std::wstring_view& title, const int width, const int height );
-  
-    ~Window();
-
+    
   public:
+    void shutdown();
+
     const void show() const;
     const void hide() const;
     const void center() const;

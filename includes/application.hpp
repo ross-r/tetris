@@ -53,6 +53,7 @@ namespace app {
 
   public:
     Application();
+    ~Application();
 
   public:
     void exec( render_routine_t render_routine, physics_routine_t physics_routine );

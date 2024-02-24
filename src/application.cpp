@@ -7,10 +7,17 @@
 #undef min
 #undef max
 
-app::Application::Application() : m_running( false ) {
+app::Application::Application() {
+  m_running = false;
   m_physics_interval = 1.0 / 60.0;
   m_physics_time = 0.0;
+  m_delta_time = 0.0;
+  m_frame_count = 0;
+  m_frame_measure = 0.0;
+  m_physics_remainder = 0.0;
 }
+
+app::Application::~Application() {}
 
 void app::Application::exec( render_routine_t render_routine, physics_routine_t physics_routine ) {
   m_running = true;

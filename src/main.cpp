@@ -59,5 +59,9 @@ int main( int argc, char* argv[] ) {
   // Start the application and run the main loop routine.
   g_app.exec( render, update );
 
+  // Cleanup.
+  app::AudioEngine::get()->shutdown();
+  g_window.shutdown();
+
   return 0;
 }
