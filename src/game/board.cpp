@@ -435,11 +435,11 @@ void game::Board::draw( const float x, const float y ) {
   //
   // Draw game information.
   //
-  //{
-  //  char buf[ 256 ] = { '\0' };
-  //  sprintf_s( buf, "MODE: A-TYPE\nSCORE: %d\nLEVEL: %d\nLINES: %d", m_score, m_level + 1, m_lines_cleared );
-  //  draw_list->AddText( { ( float ) current_x + 16, current_y }, 0xFFFFFFFF, buf );
-  //}
+  {
+    char buf[ 256 ] = { '\0' };
+    sprintf_s( buf, "MODE: A-TYPE\nSCORE: %d\nLEVEL: %d\nLINES: %d", m_score, m_level + 1, m_lines_cleared );
+    draw_list->AddText( { ( float ) current_x + 16, current_y + ( GRID_SIZE + GRID_SPACING ) * 4 + GRID_SPACING }, 0xFFFFFFFF, buf );
+  }
 
   draw_preview( x, y );
   draw_next_tetromino( x, y );
